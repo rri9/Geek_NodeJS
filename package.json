@@ -1,0 +1,25 @@
+{
+  "name": "Geek_NodeJS",
+  "version": "1.0.0",
+  "description": "Geek_NodeJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pm2": "node node_modules\\pm2\\bin\\pm2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rri9/Geek_NodeJS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rri9/Geek_NodeJS/issues"
+  },
+  "homepage": "https://github.com/rri9/Geek_NodeJS#readme",
+  "devDependencies": {
+    "pm2": "^4.2.1",
+    "ansi": "^0.3.1"
+  }
+}
