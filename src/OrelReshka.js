@@ -1,5 +1,6 @@
 const argv = require("minimist")(process.argv);
 const logger = require("./logger");
+const lg = new logger(argv._[1], argv.log);
 
 const readline = require("readline");
 const rl = readline.createInterface({
@@ -15,7 +16,6 @@ rl.question("Сыграем в 'Орел и решка'?\n", answ => {
   if (isAgree(answ)) {
     rl.pause();
     const game = new OrelReshka();
-    const lg = new logger(argv.log);
   } else {
     rl.close();
     console.log("В следующий раз...!");
@@ -45,7 +45,6 @@ class OrelReshka {
     this._getUserName()
       .then(resolve => {
         this.userName = resolve;
-        lg.startSession(this.userName);
       })
       .then(() => {
         console.log("\n\t'exit' - закончить игру.\n\nВыберите орел ('O') или решка ('Р'): ");
@@ -58,9 +57,11 @@ class OrelReshka {
               if (choise === this._getOrelReshka()) {
                 console.log("Вы угадали!");
                 this.userScore++;
+                lg.game(this.userName, "win");
               } else {
                 console.log("Вы не угадали!");
                 this.pcScore++;
+                lg.game(this.userName, "loss")
               }
               break;
             case "exit":
