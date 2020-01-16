@@ -10,8 +10,6 @@ const rl = readline.createInterface({
 
 clearScreen();
 console.log("========================");
-// console.log(argv);
-// console.log(argv.log);
 rl.question("Сыграем в 'Орел и решка'?\n", answ => {
   if (isAgree(answ)) {
     rl.pause();
@@ -42,12 +40,13 @@ class OrelReshka {
     this.startGame();
   }
   startGame() {
+    console.log("'exit' - закончить игру.");
     this._getUserName()
       .then(resolve => {
         this.userName = resolve;
       })
       .then(() => {
-        console.log("\n\t'exit' - закончить игру.\n\nВыберите орел ('O') или решка ('Р'): ");
+        console.log("\nВыберите орел ('O') или решка ('Р'): ");
         rl.resume();
         rl.on("line", choise => {
           choise = this._normalizeUserInput(choise);
