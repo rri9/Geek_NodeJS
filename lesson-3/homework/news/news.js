@@ -3,32 +3,27 @@ console.log("Script loaded");
 const request = require("request");
 const cheerio = require("cheerio");
 const url = "https://rss.newsru.com/top/main/";
+const newsToDisplayAmount = 3;
 
 request(url, (err, response, body) => {
   if (err) {
     console.log(`Request to ${url} error: ${err}`);
   } else {
     if (response.statusCode === 200) {
-      // cheerio
       const $ = cheerio.load(body,
-        {
-          xml: {
-            // normalizeWhitespace: true,
-        }
-        });
+        { xmlMode: true });
+      const dates = [];
+      const titles = [];
       const items = [];
       $("item").each((i, el) => {
-        // console.log(i);
-        // console.log(el);
-        items[i] = el.children[7].children[0].children[0].data;
-        debugger
+        dates[i] = el.children[3].children[0].data;
+        titles[i] = el.children[1].children[0].data;
+        items[i] = el.children[7].children[0].children[0].data.replace(/&#34;/g, '"');
       })
-      console.log(items[0]);
-      
-      // let title1 = $("item").first();
-      // console.log(title1);
-      // debugger
-
+      console.log('Первые 3 новости:');
+      for (let i = 0; i < newsToDisplayAmount; i++) {
+        console.log(`${dates[i]}\n${titles[i]}\n${items[i]}\n`);
+      }
     }
   }
 });
