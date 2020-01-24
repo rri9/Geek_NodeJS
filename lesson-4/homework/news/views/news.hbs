@@ -8,13 +8,14 @@
 </head>
 <body>
   <div class="news">
-<!--    {{#if error}}
-        <h3>Error!</h3>
-    {{/if}}
--->
+    <form action="/news" method="post" name="news">
+      <label>Категория: <input type="text" name="category" id="category"></label><br>
+      <label>Количество новостей: <input type="number" name="newsAmount" id="newsAmount"></label><br>
+
+    </form>
     {{#each news}}
       <div class="news-item">
-        <div class="news-item__date">{{date}}</div>
+        <div class="news-item__date">{{date}} ({{category}})</div>
         <div class="news-item__title">{{title}}</div>
         <div class="news-item__text">{{text}}</div>
       </div>
