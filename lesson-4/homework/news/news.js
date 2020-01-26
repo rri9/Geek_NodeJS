@@ -11,6 +11,9 @@ app.engine("hbs", templating.handlebars); //Выбираем функцию ша
 app.set("view engine", "hbs"); //По умолчанию используем шаблоны hbs
 app.set("views", path.resolve(__dirname, "views")); //Каталог с шаблонами
 
+app.use('/styles', express.static(path.resolve(__dirname, 'assets')) );
+app.use(express.urlencoded({ extended: true }));
+
 app.all("/", (req, res, next) => {
   console.log("Receved request at /");
   res.send("Use ./news");
@@ -19,9 +22,15 @@ app.all("/", (req, res, next) => {
 
 app.get("/news", (req, res) => {
   console.log("Receved GET request at /news");
+  res.render('news');
+});
+
+app.post("/news", (req, res) => {
+  console.log("Receved POST request at /news");
+  debugger
   getNews(url)
     .then(newsObj => {
-      getFilterNews(newsObj, req.query);
+      return getFilteredNews(newsObj, req.body);
     })
     .then(filteredNewsObj => {
       res.render("news", filteredNewsObj);
@@ -52,7 +61,6 @@ function getNews() {
               link: el.children[5].children[0].data,
             };
             newsObj.news.push(news_item);
-            // debugger;
           });
           resolve(newsObj);
         }
@@ -61,41 +69,16 @@ function getNews() {
   });
 }
 
-function getFilterNews(newsObj, query) {
-  return new Promise((resolve, reject) => {
-    if (!query.newsAmount) {
-      query.newsAmount = 10;
-    }
-    if (!query.category) {
-      query.category = "all";
-    }
-
+function getFilteredNews(newsObj, data) {
     const filteredNewsObj = {
       news: [],
     };
-    filteredNewsObj.news = newsObj.news.filter(el => {
-      // debugger;
-      if (el.category === query.category) {
-        return true;
-      }
-    });
-    debugger;
-    console.log(filteredNewsObj);
 
-    resolve(filteredNewsObj);
-  });
+  for (let i = 0, counter = 0; i < newsObj.news.length && counter < +data.newsAmount; i++) {
+    if (data.category === "all" || newsObj.news[i].category === data.category) {
+      filteredNewsObj.news.push(newsObj.news[i]);
+      counter++;
+    }
+  }
+  return filteredNewsObj;
 }
-// let newsObj = {
-//   news: [
-//     {
-//       date: '2020/01/23',
-//       title: 'Заголовок новости 1',
-//       text: 'Текст новости 1',
-//     },
-//     {
-//       date: '2020/01/20',
-//       title: 'Заголовок новости 2',
-//       text: 'Текст новости 2',
-//     },
-//   ]
-// };

@@ -4,20 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="styles/css/main.css">
   <title>News. Lesson-4</title>
 </head>
 <body>
   <div class="news">
     <form action="/news" method="post" name="news">
-      <label>Категория: <input type="text" name="category" id="category"></label><br>
-      <label>Количество новостей: <input type="number" name="newsAmount" id="newsAmount"></label><br>
-
+      <label>Категория: <select name="category" id="category">
+        <option value="all" selected>Все</option>
+        <option value="world">Мир</option>
+        <option value="russia">Россия</option>
+        <option value="sport">Спорт</option>
+      </select></label><br>
+      <label>Количество новостей: <input type="number" name="newsAmount" id="newsAmount" value="10"></label><br>
+      <input type="submit" value="Обновить">
     </form>
     {{#each news}}
       <div class="news-item">
-        <div class="news-item__date">{{date}} ({{category}})</div>
+        <div class="news-item__date">{{date}}</div>
         <div class="news-item__title">{{title}}</div>
-        <div class="news-item__text">{{text}}</div>
+        <div class="news-item__text">{{text}} <a href="{{link}}" target="_blank" rel="noopener noreferrer">Подробнее...</a></div>
       </div>
     {{/each}}
   </div>

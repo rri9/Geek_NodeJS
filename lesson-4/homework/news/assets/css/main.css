@@ -1,0 +1,20 @@
+.news-item {
+  margin-bottom: 10px;
+}
+.news-item__date {
+  font-style: italic;
+}
+.news-item__title {
+  font-weight: bold;
+}
+
+form {
+  width: 400px;
+}
+select {
+  width: 50%;
+}
+select, 
+input {
+  display: block;
+}
