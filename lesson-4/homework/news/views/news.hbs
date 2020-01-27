@@ -11,12 +11,13 @@
   <div class="news">
     <form action="/news" method="post" name="news">
       <label>Категория: <select name="category" id="category">
-        <option value="all" selected>Все</option>
-        <option value="world">Мир</option>
-        <option value="russia">Россия</option>
-        <option value="sport">Спорт</option>
+        {{#each categoriesList}}
+          <option value="{{this}}" {{{isSelected ../cookies.category this}}}>
+            {{this}}
+          </option>>
+        {{/each}}
       </select></label><br>
-      <label>Количество новостей: <input type="number" name="newsAmount" id="newsAmount" value="10"></label><br>
+      <label><input type="number" name="newsAmount" id="newsAmount" value="{{cookies.newsAmount}}"></label><br>
       <input type="submit" value="Обновить">
     </form>
     {{#each news}}
