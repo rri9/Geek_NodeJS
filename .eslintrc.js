@@ -29,6 +29,7 @@ module.exports = {
     "arrow-parens": "off",
     "no-plusplus": "off",
     "no-console": "off",
+    "key-spacing": "off",
     "node/exports-style": ["error", "module.exports"],
     "node/file-extension-in-import": ["error", "always"],
     "node/prefer-global/buffer": ["error", "always"],
