@@ -1,18 +1,23 @@
 //TODO Pool
+//TODO Пример CRUD https://habr.com/ru/company/ruvds/blog/321104/
 
-const express = require('express'),
-  app = express(),
-  path = require('path'),
-  hbs = require('hbs');
+const connParams = {
+  host: '127.0.0.1',
+  port: '3306',
+  database: 'mysql',
+  user: 'root',
+  password: 'pwd',
+};
 
 const Conn = require('./connection');
-const conn = new Conn();
+const conn = new Conn(connParams);
 const newData = ['BMW', '725', 2017, 2100000];
 
 // conn.execCmd('USE homeworkDB;').catch(err => console.log(err.message));
 conn.execCmd('USE homeworkDB;').catch(err => {
   if (err) {
-    conn._initDB()
+    conn
+      ._initDB()
       .finally(() => conn.closeConn())
       .catch(err => console.log('Инициализация БД не выполнена!'))
       .then(() => conn.execCmd('USE homeworkDB;'));
@@ -24,8 +29,7 @@ conn.execCmd('USE homeworkDB;').catch(err => {
 //     throw err;
 //   });
 
-conn
-  .execCmdData('INSERT INTO cars (mark, model, year, price) VALUES (?,?,?,?);', newData)
+  // conn.execCmdData('INSERT INTO cars (mark, model, year, price) VALUES (?,?,?,?);', newData)
   // conn.execCmdData('INSERT INTO cars VALUES ("BMW","725",2017,2100000);')
   //   // .finally(() => conn.closeConn())
   //   .catch(err => console.log(err.message));
@@ -34,8 +38,8 @@ conn
   //   // .finally(() => conn.closeConn())
   //   .catch(err => console.log(err.message));
 
-  // conn.execCmd('SELECT * FROM cars;')
-  .then(result => console.log(result))
+  conn.execCmd('SELECT * FROM cars;')
+  .then(result => {debugger; return console.log(result); })
   .finally(() => conn.closeConn())
   // .catch(err => { throw err; });
   .catch(() => console.log('Запрос к БД не выполнен!'));

@@ -24,7 +24,9 @@
     "eslint-plugin-promise": "^4.2.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lesson5_serv": "nodemon lesson-5\\homework\\src\\server.js",
+    "lesson5_main": "node lesson-5\\homework\\src\\main.js"
   },
   "keywords": [],
   "author": "",
