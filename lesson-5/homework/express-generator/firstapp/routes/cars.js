@@ -8,7 +8,7 @@ router.get('/', (req, res, next) => {
     if (err) {
       console.log(err);
       res.render('error', {
-        'message': err.message,
+        message: err.message,
         'error.status': err.status,
         'error.stack': err.stack,
       });
@@ -16,6 +16,14 @@ router.get('/', (req, res, next) => {
       res.render('cars', { data: rows });
     }
   });
+});
+
+router.get('/add', (req, res, next) => {
+  res.render('addCar', {});
+});
+
+router.post('/add', (req, res, next) => {
+  
 });
 
 module.exports = router;
