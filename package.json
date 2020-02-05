@@ -11,8 +11,11 @@
     "cheerio": "^1.0.0-rc.3",
     "consolidate": "^0.15.1",
     "cookie-parser": "^1.4.4",
+    "debug": "^4.1.1",
     "express": "^4.17.1",
     "hbs": "^4.1.0",
+    "http-errors": "^1.7.3",
+    "morgan": "^1.9.1",
     "mysql": "^2.18.1",
     "request": "^2.88.0"
   },
@@ -21,12 +24,14 @@
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-promise": "^4.2.1"
+    "eslint-plugin-promise": "^4.2.1",
+    "express-generator": "^4.16.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lesson5_serv": "nodemon lesson-5\\homework\\src\\server.js",
-    "lesson5_main": "node lesson-5\\homework\\src\\main.js"
+    "lesson5_main": "node lesson-5\\homework\\src\\main.js",
+    "expess-gen": ".\\node_modules\\.bin\\express -h"
   },
   "keywords": [],
   "author": "",

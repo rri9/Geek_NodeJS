@@ -1,5 +1,6 @@
 //TODO Pool
 //TODO Пример CRUD https://habr.com/ru/company/ruvds/blog/321104/
+//TODO Пример CRUD https://developer.mozilla.org/ru/docs/Learn/Server-side/Express_Nodejs/skeleton_website
 
 const connParams = {
   host: '127.0.0.1',

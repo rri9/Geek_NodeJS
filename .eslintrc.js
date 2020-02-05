@@ -31,6 +31,7 @@ module.exports = {
     "no-console": "off",
     "key-spacing": "off",
     "no-underscore-dangle": "off",
+    "import/no-extraneous-dependencies": "off",
     "node/exports-style": ["error", "module.exports"],
     "node/file-extension-in-import": ["error", "always"],
     "node/prefer-global/buffer": ["error", "always"],
