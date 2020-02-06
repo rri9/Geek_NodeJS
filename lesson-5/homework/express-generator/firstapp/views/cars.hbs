@@ -4,10 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../public/stylesheets/style.css">
   <title>Cars - Lesson-5</title>
 </head>
 <body>
-  <h1>Cars DB:</h1>
-  {{data}}
+  <h1>Cars DB</h1>
+  <form>
+    <button formaction="/cars/add" formmethod="GET">Add new car</button>
+  </form>
+  <table>
+    <thead>
+      <tr>
+        <td>#</td>
+        <td>Mark</td>
+        <td>Model</td>
+        <td>Year</td>
+        <td>Price</td>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each cars}}
+      <tr>
+        <td>{{this.id}}</td>
+        <td>{{this.mark}}</td>
+        <td>{{this.model}}</td>
+        <td>{{this.year}}</td>
+        <td>{{this.price}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
 </body>
 </html>

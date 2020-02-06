@@ -13,7 +13,7 @@
   <form action="/cars/add" method="post" name="car">
     <label>Марка: <input type="text" name="mark" id="mark" placeholder="Марка"></label><br>
     <label>Модель: <input type="text" name="model" id="model" placeholder="Модель"></label><br>
-    <label>Год выпуска: <input type="date" name="year" id="year" placeholder="1900"></label><br>
+    <label>Год выпуска: <input type="number" max="2025" min="1900" name="year" id="year" placeholder="1900"></label><br>
     <label>Цена: <input type="number" name="price" id="price"> руб.</label><br>
     <input type="submit" value="Добавить">
   </form>
