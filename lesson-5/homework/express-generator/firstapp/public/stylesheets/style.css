@@ -21,3 +21,7 @@ button:first-child {
 #id {
   width: 50px;
 }
+.no-border {
+  border: none;
+  text-align: center;
+}
