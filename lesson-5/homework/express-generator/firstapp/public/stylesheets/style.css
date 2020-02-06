@@ -10,3 +10,14 @@ a {
 table, tr, td {
   border: 1px solid;
 }
+thead {
+  text-align: center;
+  font-weight: bold;
+}
+
+button:first-child {
+  margin: 0 25px 5px 0;
+}
+#id {
+  width: 50px;
+}

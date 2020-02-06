@@ -9,8 +9,12 @@
 </head>
 <body>
   <h1>Cars DB</h1>
-  <form>
-    <button formaction="/cars/add" formmethod="GET">Add new car</button>
+  <form action="/cars/add" method="GET">
+    <button>Добавить</button>
+  </form>
+  <form action="/cars/edit" method="GET">
+    <button>Изменить</button>
+    <label>#: <input type="number" name="id" id="id"></label>
   </form>
   <table>
     <thead>
