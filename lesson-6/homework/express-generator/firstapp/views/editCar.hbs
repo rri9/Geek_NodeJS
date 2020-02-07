@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Cars - Lesson-5</title>
+</head>
+
+<body>
+  <h1>Edit Car in DB:</h1>
+  <form action="/cars/edit" method="post" name="car">
+    <label>id: <input type="number" name="id" id="id" placeholder="id" value="{{car.id}}"></label><br>
+    <label>Марка: <input type="text" name="mark" id="mark" placeholder="Марка" value="{{car.mark}}"></label><br>
+    <label>Модель: <input type="text" name="model" id="model" placeholder="Модель" value="{{car.model}}"></label><br>
+    <label>Год выпуска: <input type="number" max="2025" min="1900" name="year" id="year" placeholder="1900" value="{{car.year}}"></label><br>
+    <label>Цена: <input type="number" name="price" id="price" value="{{car.price}}"> руб.</label><br>
+    <input type="submit" value="Изменить">
+  </form>
+
+</body>
+
+</html>

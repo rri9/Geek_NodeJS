@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="stylesheets/style.css">
+  <title>Cars - Lesson-5</title>
+</head>
+<body>
+  <h1>Cars DB</h1>
+  <form action="/cars/add" method="GET">
+    <button>Добавить</button>
+  </form>
+  <form action="/cars/edit" method="GET">
+    <button>Изменить</button>
+    <label>#: <input type="number" name="id" id="id"></label>
+  </form>
+  <table>
+    <thead>
+      <tr>
+        <td>#</td>
+        <td>Mark</td>
+        <td>Model</td>
+        <td>Year</td>
+        <td>Price</td>
+        <td class="no-border">delete</td>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each cars}}
+      <tr>
+        <td>{{this.id}}</td>
+        <td>{{this.mark}}</td>
+        <td>{{this.model}}</td>
+        <td>{{this.year}}</td>
+        <td>{{this.price}}</td>
+        <td class="no-border"><a href="/cars/del?id={{this.id}}">x</a></td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</body>
+</html>
