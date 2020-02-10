@@ -1,5 +1,3 @@
-//TODO Показать сообщение об ошибке
-
 const express = require('express');
 const router = express.Router();
 // const connection = require('../lib/db');

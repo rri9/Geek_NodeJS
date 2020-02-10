@@ -8,6 +8,7 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const carsRouter = require('./routes/cars');
 const loginRouter = require('./routes/login');
+const registerRouter = require('./routes/register');
 
 const passport = require('./lib/auth');
 
@@ -32,6 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use(passport.initialize); //app.use(passport.initialize);
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
+app.use('/register', registerRouter);
 app.use('/cars', passport.isUserAuthenticate); //app.use('/cars', passport.isUserAuthenticate);
 app.use('/cars', carsRouter);
 

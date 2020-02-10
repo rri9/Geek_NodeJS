@@ -1,3 +1,8 @@
+/*
+  Ivan - 12345678
+  Petr - 123
+*/
+
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
 const connection = require('./db');
@@ -8,17 +13,22 @@ passport.use(new Strategy((username, password, done) => {
       console.log(err);
       return done(err);
     }
-    const user = rows[0];
+    // const user = rows[0];
+    const user = {
+      id: rows[0].id,
+      name: rows[0].name,
+      password: rows[0].password,
+    };
     if (!user) {
       console.log('Incorrect username.');
-      return done(null, false, { message: 'Incorrect username.' });
+      return done(null, false, { message: 'Неверное имя пользователя.' });
     }
     if (password !== user.password) {
       console.log('Incorrect password.');
-      return done(null, false, { message: 'Incorrect password.' });
+      return done(null, false, { message: 'Неверный пароль.' });
     }
 
-    console.log(user);
+    console.log('user in done = ', user);
     return done(null, user);
   });
 }));
@@ -57,6 +67,7 @@ module.exports = {
   authenticate: passport.authenticate('local', {
     successRedirect: '/cars',
     failureRedirect: '/login?error=1',
+    // failureFlash: true,  //connect-flash middleware is needed
     session: false,
   }),
   isUserAuthenticate: isUserAuthenticate,

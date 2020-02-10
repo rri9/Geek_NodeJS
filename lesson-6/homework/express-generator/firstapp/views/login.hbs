@@ -1,8 +1,12 @@
+<h2>Авторизация</h2>
 {{#if error}}
-    <h2>Login error!</h2>
+    <h3>Login error!</h3>
+    <h3 class="error-message">{{errmessage}}</h3>
 {{/if}}
 <form action="/login" method="POST">
     <input type="text" placeholder="username" name="username"><br>
     <input type="password" placeholder="password" name="password"><br>
     <input type="submit">
 </form>
+
+<a href="/register">Зарегистрироваться</a>
