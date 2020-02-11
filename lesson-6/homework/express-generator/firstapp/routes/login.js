@@ -9,6 +9,13 @@ router.get('/', (req, res) => {
 });
 
 /* Login method */
-router.post('/', passport.authenticate);
+// router.post('/', passport.authenticate);
+router.post('/', passport.authenticate, (req, res) => {
+  debugger
+  console.log('  In /login authenticate req.user: ', req.user);
+  console.log('  In /login authenticate req.passport: ', req.passport);
+  console.log('  In /login authenticate req.session: ', req.session);
+  res.redirect('/cars');
+});
 
 module.exports = router;

@@ -7,7 +7,7 @@ const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
 const connection = require('./db');
 
-passport.use(new Strategy((username, password, done) => {
+passport.use(new Strategy({ session: false }, (username, password, done) => {
   connection.query('SELECT * FROM users WHERE name = ?', username, (err, rows) => {
     if (err) {
       console.log(err);
@@ -27,17 +27,16 @@ passport.use(new Strategy((username, password, done) => {
       console.log('Incorrect password.');
       return done(null, false, { message: 'Неверный пароль.' });
     }
-
-    console.log('user in done = ', user);
+    debugger;
+    console.log('  In done user = ', user);
     return done(null, user);
   });
 }));
 
 function isUserAuthenticate(req, res, next) {
-  console.log('in isUserAuthenticate');
-  console.log('req.user: ', req.user);
+  console.log('  In isUserAuthenticate req.user: ', req.user);
 
-  debugger
+  debugger;
   if (req.user) {
     next();
   } else {
@@ -64,12 +63,19 @@ function isUserAuthenticate(req, res, next) {
 // });
 
 module.exports = {
-  authenticate: passport.authenticate('local', {
-    successRedirect: '/cars',
-    failureRedirect: '/login?error=1',
-    // failureFlash: true,  //connect-flash middleware is needed
-    session: false,
-  }),
+  // authenticate: passport.authenticate('local', {
+  //   successRedirect: '/cars',
+  //   failureRedirect: '/login?error=1',
+  //   // failureFlash: true,  //connect-flash middleware is needed
+  //   session: false,
+  // }),
+  authenticate: passport.authenticate(
+    'local',
+    {
+      // failureRedirect: '/login?error=1',
+      // failureFlash: true,  //connect-flash middleware is needed
+      session: false,
+    }),
   isUserAuthenticate: isUserAuthenticate,
   initialize: passport.initialize(), //initialize: passport.initialize(),
 };

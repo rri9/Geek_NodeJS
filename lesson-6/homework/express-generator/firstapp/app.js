@@ -20,7 +20,7 @@ app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -30,11 +30,24 @@ app.use(express.static(path.join(__dirname, 'public')));
 //   secret: 'secret phrase', // ключ
 // }));
 
-// app.use(passport.initialize); //app.use(passport.initialize);
+function isUserAuthenticate(req, res, next) {
+  console.log('  In app.js isUserAuthenticate req.user: ', req.user);
+  console.log('  In app.js isUserAuthenticate req.passport: ', req.passport);
+  console.log('  In app.js isUserAuthenticate req.session: ', req.session);
+
+  debugger;
+  if (req.user) {
+    next();
+  } else {
+    res.redirect('/login');
+  }
+}
+
+app.use(passport.initialize); //app.use(passport.initialize);
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
-app.use('/cars', passport.isUserAuthenticate); //app.use('/cars', passport.isUserAuthenticate);
+app.use('/cars', isUserAuthenticate); //app.use('/cars', passport.isUserAuthenticate);
 app.use('/cars', carsRouter);
 
 
