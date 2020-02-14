@@ -5,8 +5,6 @@ const passport = require('../lib/auth');
 
 /* Login form */
 router.get('/', (req, res) => {
-  console.log('  In login get req.flash("error") = ', req.flash('error')[0]);
-  debugger
   res.render('login', {
     error: !!req.query.error,
     errmessage: req.flash('error')[0],

@@ -5,6 +5,7 @@
 
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
+const crypt = require('../lib/crypt');
 const db = require('./db');
 
 // passport.use(new Strategy({ session: false }, (username, password, done) => {
@@ -19,7 +20,9 @@ passport.use(new Strategy((username, password, done) => {
       console.log('Incorrect username.');
       return done(null, false, { message: 'Неверное имя пользователя.' });
     }
-    if (password !== user.password) {
+    // if (password !== user.password) {
+    console.log('Compare pwds: ', password, ' vs ', user.password);
+    if (!crypt.isPwdGood(password, user.password)) {
       console.log('Incorrect password.');
       return done(null, false, { message: 'Неверный пароль.' });
     }
@@ -63,11 +66,11 @@ module.exports = {
     'local',
     {
       // successRedirect: '/cars',
-      failureRedirect: '/login', //TODO Кастомный колбэк при ошибке для возврата req.flash ???
+      failureRedirect: '/login?error=1',
       failureFlash: true, //connect-flash middleware is needed
     },
   ),
-  isUserAuthenticate: isUserAuthenticate,
+  isUserAuthenticate,
   initialize: passport.initialize(), //initialize: passport.initialize(),
   session: passport.session(),
   sercetPhrase: '^_^',

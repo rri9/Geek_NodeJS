@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../lib/db');
+const crypt = require('../lib/crypt');
 
 /* Registration form */
 router.get('/', (req, res) => {
@@ -30,7 +31,7 @@ router.post('/', (req, res) => {
     } else {
       const newUser = {
         name: req.body.username,
-        password: req.body.password,
+        password: crypt.makePwdCrypted(req.body.password),
       };
       db.connection.query('INSERT users SET ?', newUser, (err) => {
         if (err) {
