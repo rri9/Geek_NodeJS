@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const connection = require('../lib/db');
+const db = require('../lib/db');
 
 /* GET cars */
 router.get('/', (req, res) => {
-  connection.query('SELECT * FROM cars ORDER BY id asc', (err, rows) => {
+  db.connection.query('SELECT * FROM cars ORDER BY id asc', (err, rows) => {
     if (err) {
       console.log(err);
       res.render('error', {
@@ -30,7 +30,7 @@ router.post('/add', (req, res) => {
     price: req.body.price,
   };
   console.log(car);
-  connection.query('INSERT cars SET ?', car, (err) => {
+  db.connection.query('INSERT cars SET ?', car, (err) => {
     if (err) {
       console.log('error in post /add');
       res.render('error', {
@@ -46,7 +46,7 @@ router.post('/add', (req, res) => {
 /* EDIT car form */
 router.get('/edit', (req, res) => {
   if (Object.prototype.hasOwnProperty.call(req.query, 'id')) {
-    connection.query('SELECT * FROM cars WHERE id = ?', req.query.id, (err, rows) => {
+    db.connection.query('SELECT * FROM cars WHERE id = ?', req.query.id, (err, rows) => {
       if (err) {
         console.log(err);
         res.render('error', {
@@ -72,7 +72,7 @@ router.post('/edit', (req, res) => {
     price: req.body.price,
   };
   console.log(car);
-  connection.query('UPDATE cars SET ? WHERE id = ?', [car, req.body.id], (err) => {
+  db.connection.query('UPDATE cars SET ? WHERE id = ?', [car, req.body.id], (err) => {
     if (err) {
       console.log('error in post /edit');
       res.render('error', {
@@ -90,7 +90,7 @@ router.post('/edit', (req, res) => {
 router.get('/del', (req, res) => {
   console.log('in del method');
   if (Object.prototype.hasOwnProperty.call(req.query, 'id')) {
-    connection.query('DELETE FROM cars WHERE id = ?', req.query.id, (err) => {
+    db.connection.query('DELETE FROM cars WHERE id = ?', req.query.id, (err) => {
       if (err) {
         console.log(err);
         res.render('error', {

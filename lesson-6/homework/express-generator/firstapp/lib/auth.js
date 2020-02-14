@@ -5,20 +5,16 @@
 
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
-const connection = require('./db');
+const db = require('./db');
 
-passport.use(new Strategy({ session: false }, (username, password, done) => {
-  connection.query('SELECT * FROM users WHERE name = ?', username, (err, rows) => {
+// passport.use(new Strategy({ session: false }, (username, password, done) => {
+passport.use(new Strategy((username, password, done) => {
+  db.connection.query('SELECT * FROM users WHERE name = ?', username, (err, rows) => {
     if (err) {
       console.log(err);
       return done(err);
     }
-    // const user = rows[0];
-    const user = {
-      id: rows[0].id,
-      name: rows[0].name,
-      password: rows[0].password,
-    };
+    const user = rows[0];
     if (!user) {
       console.log('Incorrect username.');
       return done(null, false, { message: 'Неверное имя пользователя.' });
@@ -27,16 +23,15 @@ passport.use(new Strategy({ session: false }, (username, password, done) => {
       console.log('Incorrect password.');
       return done(null, false, { message: 'Неверный пароль.' });
     }
-    debugger;
-    console.log('  In done user = ', user);
-    return done(null, user);
+    const plainUser = { ...user };
+    delete plainUser.password;
+    console.log('  In done plainUser = ', plainUser);
+    return done(null, plainUser);
   });
 }));
 
 function isUserAuthenticate(req, res, next) {
   console.log('  In isUserAuthenticate req.user: ', req.user);
-
-  debugger;
   if (req.user) {
     next();
   } else {
@@ -44,38 +39,36 @@ function isUserAuthenticate(req, res, next) {
   }
 }
 
-// passport.serializeUser((user, done) => {
-//   console.log('In serialize');
-//   return done(null, user.id);
-// });
+passport.serializeUser((user, done) => {
+  console.log('  In serialize');
+  return done(null, user.id);
+});
 
-// passport.deserializeUser((id, done) => {
-//   console.log('In deserialize');
-//   connection.query('SELECT * FROM user WHERE id = ?', id, (err, rows) => {
-//     if (err) {
-//       console.log('Error in deserialize');
-//       return done(err);
-//     }
-//     const user = rows[0];
-//     delete user.password;
-//     return done(null, user);
-//   });
-// });
+passport.deserializeUser((id, done) => {
+  console.log('  In deserialize');
+  db.connection.query('SELECT * FROM users WHERE id = ?', id, (err, rows) => {
+    if (err) {
+      console.log('Error in deserialize');
+      return done(err);
+    }
+    const user = rows[0];
+    delete user.password;
+    console.log('  In deserialize user: ', user);
+    return done(null, user);
+  });
+});
 
 module.exports = {
-  // authenticate: passport.authenticate('local', {
-  //   successRedirect: '/cars',
-  //   failureRedirect: '/login?error=1',
-  //   // failureFlash: true,  //connect-flash middleware is needed
-  //   session: false,
-  // }),
   authenticate: passport.authenticate(
     'local',
     {
-      // failureRedirect: '/login?error=1',
-      // failureFlash: true,  //connect-flash middleware is needed
-      session: false,
-    }),
+      // successRedirect: '/cars',
+      failureRedirect: '/login', //TODO Кастомный колбэк при ошибке для возврата req.flash ???
+      failureFlash: true, //connect-flash middleware is needed
+    },
+  ),
   isUserAuthenticate: isUserAuthenticate,
   initialize: passport.initialize(), //initialize: passport.initialize(),
+  session: passport.session(),
+  sercetPhrase: '^_^',
 };

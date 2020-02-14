@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const connection = require('../lib/db');
+const db = require('../lib/db');
 
 /* Registration form */
 router.get('/', (req, res) => {
@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
 /* Registration method */
 router.post('/', (req, res) => {
   //Check if username allready exist
-  connection.query('SELECT * FROM users WHERE name = ?', req.body.username, (err, rows) => {
+  db.connection.query('SELECT * FROM users WHERE name = ?', req.body.username, (err, rows) => {
     if (err) {
       console.log(err);
       res.render('error', {
@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
         name: req.body.username,
         password: req.body.password,
       };
-      connection.query('INSERT users SET ?', newUser, (err) => {
+      db.connection.query('INSERT users SET ?', newUser, (err) => {
         if (err) {
           console.log('error in post /register');
           res.render('error', {

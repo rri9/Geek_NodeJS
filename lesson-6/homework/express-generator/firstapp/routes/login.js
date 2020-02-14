@@ -5,16 +5,20 @@ const passport = require('../lib/auth');
 
 /* Login form */
 router.get('/', (req, res) => {
-  res.render('login', { error: req.query.error });
+  console.log('  In login get req.flash("error") = ', req.flash('error')[0]);
+  debugger
+  res.render('login', {
+    error: !!req.query.error,
+    errmessage: req.flash('error')[0],
+  });
 });
 
 /* Login method */
 // router.post('/', passport.authenticate);
 router.post('/', passport.authenticate, (req, res) => {
-  debugger
-  console.log('  In /login authenticate req.user: ', req.user);
-  console.log('  In /login authenticate req.passport: ', req.passport);
-  console.log('  In /login authenticate req.session: ', req.session);
+  if (req.body.remember) {
+    req.session.cookie.maxAge = 1000 * 60 * 60 * 24; //1 день
+  }
   res.redirect('/cars');
 });
 
