@@ -42,7 +42,7 @@ app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/cars', isUserAuthenticate); //app.use('/cars', passport.isUserAuthenticate);
 app.use('/cars', carsRouter);
-
+app.use('/logout', require('./routes/logout'));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
