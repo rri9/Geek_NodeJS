@@ -16,7 +16,6 @@ router.use((req, res, next) => {
       return res.json({ autherror: true, message: 'Wrong token' });
     }
     req.user = payload;
-    console.log('  In cars.js payload = ', payload);
     return next();
   });
   // }
@@ -85,15 +84,14 @@ router.post('/', (req, res) => {
 // });
 
 /* EDIT cars method*/
-router.put('/:id', (req, res) => {
+router.put('/', (req, res) => {
   const car = {
     mark: req.body.mark,
     model: req.body.model,
     year: req.body.year,
     price: req.body.price,
   };
-  console.log(car);
-  db.connection.query('UPDATE cars SET ? WHERE id = ?', [car, req.params.id], (err, data) => {
+  db.connection.query('UPDATE cars SET ? WHERE id = ?', [car, req.body.id], (err, data) => {
     if (err) {
       console.log('error in post /edit');
       res.render('error', {
@@ -111,22 +109,21 @@ router.put('/:id', (req, res) => {
 
 /* DELETE cars method*/
 router.delete('/:id', (req, res) => {
-  console.log('in del method');
-  if (Object.prototype.hasOwnProperty.call(req.query, 'id')) {
-    db.connection.query('DELETE FROM cars WHERE id = ?', req.params.id, (err, data) => {
-      if (err) {
-        console.log(err);
-        res.render('error', {
-          'message': err.message,
-          'error.status': err.status,
-          'error.stack': err.stack,
-        });
-      } else {
-        console.log('delete row id = ', req.query.id);
-        res.json(data);
-      }
-    });
-  }
+  // if (Object.prototype.hasOwnProperty.call(req.query, 'id')) {
+  db.connection.query('DELETE FROM cars WHERE id = ?', req.params.id, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.render('error', {
+        'message': err.message,
+        'error.status': err.status,
+        'error.stack': err.stack,
+      });
+    } else {
+      console.log('delete row id = ', req.params.id);
+      res.json(data);
+    }
+  });
+  // }
 });
 
 module.exports = router;

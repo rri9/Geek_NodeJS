@@ -1,4 +1,4 @@
-//TODO Кнопка Запомнить меня - как сделать без сессии?
+//TODO Кнопка Запомнить меня: ставить срок жизни куков
 //TODO MySQL connectionPool
 
 const createError = require('http-errors');

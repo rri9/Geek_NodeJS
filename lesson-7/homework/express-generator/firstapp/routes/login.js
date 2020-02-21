@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const path = require('path');
 const db = require('../lib/db');
 const crypt = require('../lib/crypt');
 const secretPhrase = require('../lib/credentials');
@@ -21,14 +20,13 @@ router.post('/', (req, res) => {
       console.log('Incorrect username.');
       return res.status(403).json({ autherror: true, message: 'Неверное имя пользователя.' });
     }
-    console.log('Compare pwds: ', password, ' vs ', user.password);
     if (!crypt.isPwdGood(password, user.password)) {
       console.log('Incorrect password.');
       return res.status(403).json({ autherror: true, message: 'Неверный пароль.' });
     }
     const plainUser = { ...user };
     delete plainUser.password;
-    // //TODO Реализация записи токена в куки на backend'е
+    // Реализация записи токена в куки на backend'е
     // const token = jwt.sign(plainUser, secretPhrase);
     // res.cookie(`token=${token}; HttpOnly; path='/'`);
     return res.json({

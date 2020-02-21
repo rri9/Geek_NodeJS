@@ -1,4 +1,4 @@
-let app = new Vue({
+const app = new Vue({
   el: '#app',
   data: {
     isAutenticated: false,
@@ -10,6 +10,14 @@ let app = new Vue({
     cars: [],
     showAddCar: false,
     addCarObj: {
+      mark: '',
+      model: '',
+      year: undefined,
+      price: 0,
+    },
+    showChangeCar: false,
+    changeCarObj: {
+      id: '',
       mark: '',
       model: '',
       year: undefined,
@@ -40,9 +48,10 @@ let app = new Vue({
       });
       const result = await response.json();
       if (!result.autherror) {
-        //TODO Почему не работает на запись с HttpOnly?
+        //TODO HttpOnly только со стороны сервера, большинство браузеров не дает даже на запись
         // document.cookie = `token=${result.token}; HttpOnly; path=/`;
         document.cookie = `token=${result.token}; path=/`;
+        this.getCarsAll();
         this.isAutenticated = true;
         return;
       }
@@ -82,7 +91,6 @@ let app = new Vue({
         body: formBody,
       });
       const result = await response.json();
-      console.log('  In addCar method', result);
       if (result) {
         this.getCarsAll();
         this.showAddCar = false;
@@ -90,8 +98,51 @@ let app = new Vue({
     },
     delCar: async function (event) {
       event.preventDefault();
-      console.log('  In delCar method data-id = ', event.target.dataset.id);
-      //TODO fetch метод delete
+      const response = await fetch(`/cars/${event.target.dataset.id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+      });
+      const result = await response.json();
+      if (result.affectedRows === 1) {
+        this.getCarsAll();
+      }
+    },
+    changeCarShow: function (event) {
+      event.preventDefault();
+      //TODO Проверка не пустой ли ид и есть ли он в карс
+      if (this.changeCarObj.id) {
+        document.querySelector('#id').classList.remove('id-need');
+        this.showChangeCar = true;
+        this.changeCarObj = this.cars.find((car) => car.id === +this.changeCarObj.id);
+      } else {
+        document.querySelector('#id').classList.add('id-need');
+      }
+    },
+    changeCar: async function (event) {
+      event.preventDefault();
+      let formBody = [];
+      Object.keys(this.changeCarObj).forEach(prop => {
+        const encodedKey = encodeURIComponent(prop);
+        const encodedValue = encodeURIComponent(this.changeCarObj[prop]);
+        formBody.push(encodedKey + '=' + encodedValue);
+      });
+      formBody = formBody.join('&');
+
+      const response = await fetch('/cars', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+        body: formBody,
+      });
+      const result = await response.json();
+      if (result) {
+        this.getCarsAll();
+        this.showChangeCar = false;
+      }
+    },
+    logout: function () {
+      document.cookie = `token=""; path=/; max-age=-1`;
+      this.message = '';
+      this.isAutenticated = false;
     },
   },
   mounted() {
@@ -112,39 +163,43 @@ let app = new Vue({
       <input type="checkbox" v-model="remember" name="remember" id="remember" value="true"><label for="remember">Запомнить меня</label><br>
       <input type="submit" @click="getToken">
     </form>
-
+      
     <a href="/register">Зарегистрироваться</a>
-
-    <div>
-      <h3>Ввели</h3>
-      <p>Логин: {{username}}</p>
-      <p>Пароль: {{password}}</p>
-      <p>rem: {{remember}}</p>
-    </div>
   </div>
-  
+      
   <div class="cars" v-else>
-    <div class="addCar" v-if="showAddCar">
-    <h1>Add Car to DB:</h1>
-    <form action="#">
-      <label>Марка: <input type="text" v-model="addCarObj.mark" name="mark" id="mark" placeholder="Марка"></label><br>
-      <label>Модель: <input type="text" v-model="addCarObj.model" name="model" id="model" placeholder="Модель"></label><br>
-      <label>Год выпуска: <input type="number" v-model="addCarObj.year" max="2025" min="1900" name="year" id="year" placeholder="1900"></label><br>
-      <label>Цена: <input type="number" v-model="addCarObj.price" name="price" id="price"> руб.</label><br>
-      <input type="submit" value="Добавить" @click="addCar">
-    </form>
+      
+    <div v-if="showAddCar || showChangeCar">
+      
+      <div v-if="showAddCar">
+        <h1>Add Car to DB:</h1>
+        <form action="#">
+          <label>Марка: <input type="text" v-model="addCarObj.mark" name="mark" id="mark" placeholder="Марка"></label><br>
+          <label>Модель: <input type="text" v-model="addCarObj.model" name="model" id="model" placeholder="Модель"></label><br>
+          <label>Год выпуска: <input type="number" v-model="addCarObj.year" max="2025" min="1900" name="year" id="year" placeholder="1900"></label><br>
+          <label>Цена: <input type="number" v-model="addCarObj.price" name="price" id="price"> руб.</label><br>
+          <input type="submit" value="Добавить" @click="addCar">
+        </form>
+      </div>
+      <div v-if="showChangeCar">
+        <h1>Change Car in DB:</h1>
+        <form action="#">
+          <label>Марка: <input type="text" v-model="changeCarObj.mark" name="mark" id="mark" placeholder="Марка"></label><br>
+          <label>Модель: <input type="text" v-model="changeCarObj.model" name="model" id="model" placeholder="Модель"></label><br>
+          <label>Год выпуска: <input type="number" v-model="changeCarObj.year" max="2025" min="1900" name="year" id="year" placeholder="1900"></label><br>
+          <label>Цена: <input type="number" v-model="changeCarObj.price" name="price" id="price"> руб.</label><br>
+          <input type="submit" value="Изменить" @click="changeCar">
+        </form>
+      </div>
     </div>
-
     <div class="cars-table" v-else>
-      <!--//TODO Поправить структуру div class="cars" для vue-->
       <h1>Cars DB</h1>
       <form action="#">
         <button @click="addCarShow">Добавить</button>
       </form>
       <form action="#">
-      <!--//TODO  -->
-        <button @click="">Изменить</button>
-        <label>id: <input type="number" name="id" id="id"></label>
+        <button @click="changeCarShow">Изменить</button>
+        <label>id: <input type="number" v-model="changeCarObj.id" name="id" id="id"></label>
       </form>
       <table>
         <thead>
@@ -166,16 +221,38 @@ let app = new Vue({
             <td>{{car.model}}</td>
             <td>{{car.year}}</td>
             <td>{{car.price}}</td>
-            <!--//TODO  -->
-            <!-- <td class="no-border"><a href="/cars/del?id={{car.id}}">x</a></td> -->
             <td class="no-border"><button @click="delCar" :data-id="car.id">x</button></td>
           </tr>
         </tbody>
       </table>
-      <!--//TODO  -->
-      <a href="/logout">Выход</a>
+      <button @click="logout">Выход</button>
     </div>
   </div>
 </div>
   `,
 });
+
+/*
+    <div v-if="showAddCar>
+      <h1>Add Car to DB:</h1>
+      <form action="#">
+        <label>Марка: <input type="text" v-model="addCarObj.mark" name="mark" id="mark" placeholder="Марка"></label><br>
+        <label>Модель: <input type="text" v-model="addCarObj.model" name="model" id="model" placeholder="Модель"></label><br>
+        <label>Год выпуска: <input type="number" v-model="addCarObj.year" max="2025" min="1900" name="year" id="year" placeholder="1900"></label><br>
+        <label>Цена: <input type="number" v-model="addCarObj.price" name="price" id="price"> руб.</label><br>
+        <input type="submit" value="Добавить" @click="addCar">
+      </form>
+    </div>
+
+
+    <div v-else-if="showChangeCar>
+        <h1>Change Car in DB:</h1>
+        <form action="#">
+          <label>Марка: <input type="text" v-model="addCarObj.mark" name="mark" id="mark" placeholder="Марка"></label><br>
+          <label>Модель: <input type="text" v-model="addCarObj.model" name="model" id="model" placeholder="Модель"></label><br>
+          <label>Год выпуска: <input type="number" v-model="addCarObj.year" max="2025" min="1900" name="year" id="year" placeholder="1900"></label><br>
+          <label>Цена: <input type="number" v-model="addCarObj.price" name="price" id="price"> руб.</label><br>
+          <input type="submit" value="Добавить" @click="addCar">
+        </form>
+    </div>
+*/
