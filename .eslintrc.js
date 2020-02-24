@@ -2,6 +2,7 @@ module.exports = {
   plugins: [
     "promise",
     "node",
+    // "vue",
   ],
   env: {
     browser: true,
@@ -11,6 +12,7 @@ module.exports = {
   },
   extends: [
     'airbnb-base',
+    // 'plugin:vue/essential',
     // 'plugin:node/recommended',
     // 'plugin:promise/recommended'
   ],
@@ -31,6 +33,7 @@ module.exports = {
     "no-console": "off",
     "key-spacing": "off",
     "no-underscore-dangle": "off",
+    "object-shorthand": "off",
     "import/no-extraneous-dependencies": "off",
     "node/exports-style": ["error", "module.exports"],
     "node/file-extension-in-import": ["error", "always"],
