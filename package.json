@@ -8,15 +8,21 @@
     "url": "git+https://github.com/rri9/Geek_NodeJS.git"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cheerio": "^1.0.0-rc.3",
+    "connect-flash": "^0.1.1",
     "consolidate": "^0.15.1",
     "cookie-parser": "^1.4.4",
     "debug": "^4.1.1",
     "express": "^4.17.1",
+    "express-mysql-session": "^2.1.3",
+    "express-session": "^1.17.0",
     "hbs": "^4.1.0",
     "http-errors": "^1.7.3",
     "morgan": "^1.9.1",
     "mysql": "^2.18.1",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
     "request": "^2.88.0"
   },
   "devDependencies": {
