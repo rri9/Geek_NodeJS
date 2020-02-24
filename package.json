@@ -24,7 +24,9 @@
     "mysql": "^2.18.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "socket.io": "^2.3.0",
+    "vue-socket.io": "^3.0.7"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
@@ -33,13 +35,16 @@
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-vue": "^6.2.0",
-    "express-generator": "^4.16.1"
+    "express-generator": "^4.16.1",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lesson5_serv": "nodemon lesson-5\\homework\\src\\server.js",
     "lesson5_main": "node lesson-5\\homework\\src\\main.js",
-    "expess-gen": ".\\node_modules\\.bin\\express -h"
+    "expess-gen": ".\\node_modules\\.bin\\express -h",
+    "build_lesson-8": "node_modules\\.bin\\webpack --mode development --config ./webpack.config.js"
   },
   "keywords": [],
   "author": "",

@@ -28,3 +28,18 @@ button:first-child {
 .id-need {
   border-color: red;
 }
+.is-waiting-for-server {
+  animation: dataLoading 1s ease-in-out infinite;
+}
+
+@keyframes dataLoading {
+  from {
+    color: transparent;
+  }
+  50% {
+    color: black;
+  }
+  to {
+    color: transparent;
+  }
+}

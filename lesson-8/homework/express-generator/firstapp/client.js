@@ -1,3 +1,8 @@
+const VueSocketIO = require('vue-socket.io');
+Vue.use(new VueSocketIO({
+  connection: 'localhost:3000',
+}));
+
 const app = new Vue({
   el: '#app',
   data: {
@@ -23,11 +28,19 @@ const app = new Vue({
       year: undefined,
       price: 0,
     },
+    isWaitingForServer: false,
+  },
+  sockets: {
+    test: function () {
+      console.log('Smb else is connected');
+    },
+    changeDB: function () {
+      this.getCarsAll();
+    },
   },
   methods: {
     getToken: async function (event) {
-      event.preventDefault();
-
+      this.isWaitingForServer = true;
       const props = {
         username: this.username,
         password: this.password,
@@ -53,30 +66,34 @@ const app = new Vue({
         document.cookie = `token=${result.token}; path=/`;
         this.getCarsAll();
         this.isAutenticated = true;
+        this.isWaitingForServer = false;
         return;
       }
 
       this.message = result.message;
       this.isAutenticated = false;
       this.autherror = true;
+      this.isWaitingForServer = false;
     },
     getCarsAll: async function () {
+      this.isWaitingForServer = true;
       const response = await fetch('/cars');
       const result = await response.json();
 
       if (result.autherror) {
+        this.isWaitingForServer = false;
         this.isAutenticated = false;
       } else {
+        this.isWaitingForServer = false;
         this.isAutenticated = true;
         this.cars = result.cars;
       }
     },
     addCarShow: function (event) {
-      event.preventDefault();
       this.showAddCar = true;
     },
     addCar: async function (event) {
-      event.preventDefault();
+      this.isWaitingForServer = true;
       let formBody = [];
       Object.keys(this.addCarObj).forEach(prop => {
         const encodedKey = encodeURIComponent(prop);
@@ -93,23 +110,25 @@ const app = new Vue({
       const result = await response.json();
       if (result) {
         this.getCarsAll();
+        this.isWaitingForServer = false;
         this.showAddCar = false;
       }
+      this.$socket.emit('changeDB');
     },
     delCar: async function (event) {
-      event.preventDefault();
+      this.isWaitingForServer = true;
       const response = await fetch(`/cars/${event.target.dataset.id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
       });
       const result = await response.json();
       if (result.affectedRows === 1) {
+        this.isWaitingForServer = false;
         this.getCarsAll();
       }
+      this.$socket.emit('changeDB');
     },
     changeCarShow: function (event) {
-      event.preventDefault();
-      //TODO Проверка не пустой ли ид и есть ли он в карс
       if (this.changeCarObj.id) {
         document.querySelector('#id').classList.remove('id-need');
         this.showChangeCar = true;
@@ -119,7 +138,7 @@ const app = new Vue({
       }
     },
     changeCar: async function (event) {
-      event.preventDefault();
+      this.isWaitingForServer = true;
       let formBody = [];
       Object.keys(this.changeCarObj).forEach(prop => {
         const encodedKey = encodeURIComponent(prop);
@@ -136,8 +155,10 @@ const app = new Vue({
       const result = await response.json();
       if (result) {
         this.getCarsAll();
+        this.isWaitingForServer = false;
         this.showChangeCar = false;
       }
+      this.$socket.emit('changeDB');
     },
     logout: function () {
       document.cookie = `token=""; path=/; max-age=-1`;
@@ -150,6 +171,9 @@ const app = new Vue({
   },
   template: `
 <div>
+  <div class="is-waiting-for-server" v-if="isWaitingForServer">
+  working...
+  </div>
   <div class="auth" v-if="!isAutenticated">
     <h2>Авторизация</h2>
 
@@ -161,7 +185,7 @@ const app = new Vue({
       <input type="text" v-model="username" placeholder="username" name="username"><br>
       <input type="password" v-model="password" placeholder="password" name="password"><br>
       <input type="checkbox" v-model="remember" name="remember" id="remember" value="true"><label for="remember">Запомнить меня</label><br>
-      <input type="submit" @click="getToken">
+      <input type="submit" @click.prevent="getToken">
     </form>
       
     <a href="/register">Зарегистрироваться</a>
@@ -178,7 +202,7 @@ const app = new Vue({
           <label>Модель: <input type="text" v-model="addCarObj.model" name="model" id="model" placeholder="Модель"></label><br>
           <label>Год выпуска: <input type="number" v-model="addCarObj.year" max="2025" min="1900" name="year" id="year" placeholder="1900"></label><br>
           <label>Цена: <input type="number" v-model="addCarObj.price" name="price" id="price"> руб.</label><br>
-          <input type="submit" value="Добавить" @click="addCar">
+          <input type="submit" value="Добавить" @click.prevent="addCar">
         </form>
       </div>
       <div v-if="showChangeCar">
@@ -188,17 +212,17 @@ const app = new Vue({
           <label>Модель: <input type="text" v-model="changeCarObj.model" name="model" id="model" placeholder="Модель"></label><br>
           <label>Год выпуска: <input type="number" v-model="changeCarObj.year" max="2025" min="1900" name="year" id="year" placeholder="1900"></label><br>
           <label>Цена: <input type="number" v-model="changeCarObj.price" name="price" id="price"> руб.</label><br>
-          <input type="submit" value="Изменить" @click="changeCar">
+          <input type="submit" value="Изменить" @click.prevent="changeCar">
         </form>
       </div>
     </div>
     <div class="cars-table" v-else>
       <h1>Cars DB</h1>
       <form action="#">
-        <button @click="addCarShow">Добавить</button>
+        <button @click.prevent="addCarShow">Добавить</button>
       </form>
       <form action="#">
-        <button @click="changeCarShow">Изменить</button>
+        <button @click.prevent="changeCarShow">Изменить</button>
         <label>id: <input type="number" v-model="changeCarObj.id" name="id" id="id"></label>
       </form>
       <table>
@@ -225,7 +249,7 @@ const app = new Vue({
           </tr>
         </tbody>
       </table>
-      <button @click="logout">Выход</button>
+      <button @click.prevent="logout">Выход</button>
     </div>
   </div>
 </div>

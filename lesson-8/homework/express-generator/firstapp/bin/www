@@ -6,6 +6,7 @@
 
 const http = require('http');
 const debug = require('debug')('firstapp:server');
+const socketIO = require('socket.io'); //Websocket
 const app = require('../app');
 
 /**
@@ -20,6 +21,20 @@ app.set('port', port);
  */
 
 const server = http.createServer(app);
+
+// Web Socket
+const io = socketIO(server);
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.broadcast.emit('test');
+  socket.on('disconnect', () => {
+    console.log('a user disconnected');
+  });
+  socket.on('changeDB', (msg) => {
+    console.log('message:', msg);
+    socket.broadcast.emit('changeDB', msg);
+  });
+});
 
 /**
  * Listen on provided port, on all network interfaces.
