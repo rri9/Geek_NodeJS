@@ -21,6 +21,6 @@
   "homepage": "https://github.com/rri9/Geek_NodeJS#readme",
   "dependencies": {
     "fs": "0.0.1-security",
-    "minimist": "^1.2.0"
+    "minimist": "^1.2.2"
   }
 }
